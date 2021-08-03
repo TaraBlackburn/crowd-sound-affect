@@ -4,7 +4,7 @@ import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/app_project/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'wav', 'mp3', 'm4a', 'json'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
