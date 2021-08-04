@@ -11,6 +11,7 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
 import seaborn as sns 
 import matplotlib.pyplot as plt
+from tensorflow.python.keras.callbacks import ModelCheckpoint
 
 
 class VGG16model():
@@ -110,7 +111,7 @@ class Inception_v3model():
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2)
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callabcks.ModelCheckpoint(filepath='model_checkpoints/')]
 
     def model_fit(self, epochs=50):
         """Fits the model"""
