@@ -27,7 +27,7 @@ class VGG16model():
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
         self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
-                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
 
     def model_build(self):
@@ -70,23 +70,10 @@ class VGG16model():
         ax.yaxis.set_ticklabels(['Approval', 'Disapproval', 'Neutral']);
 
 
-    def plotImages(self, images_arr):
-        """Plots Images with BGR (not RGB)"""
-        self.images_arr = images_arr
-        imgs, labels = next(self.images_train)
-        fig, axes = plt.subplots(1, 10, figsize=(20,20))
-        axes = axes.flatten()
-        for img, ax in zip(self.images_arr, axes):
-            ax.imshow(img)
-            ax.axis('off')
-        plt.tight_layout()
-        plt.show()
-
-
 class Inception_v3model():
 
     def __init__(self, train_path, valid_path, batch_size=16): 
-        """Takes in a path to a directory"""
+        """Takes in a path to a directory for training and validation sets"""
         self.train_path = train_path
         self.valid_path = valid_path
         self.batch_size = batch_size
@@ -96,7 +83,7 @@ class Inception_v3model():
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
         self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
 
     def model_build(self, learningrate=.001):
@@ -141,17 +128,17 @@ class Inception_v3model():
         ax.yaxis.set_ticklabels(['Approval', 'Disapproval', 'Neutral']);
 
 
-    def plotImages(self, images_arr):
-        """Plots Images with BGR (not RGB)"""
-        self.images_arr = images_arr
-        imgs, labels = next(self.images_train)
-        fig, axes = plt.subplots(1, 10, figsize=(20,20))
-        axes = axes.flatten()
-        for img, ax in zip(self.images_arr, axes):
-            ax.imshow(img)
-            ax.axis('off')
-        plt.tight_layout()
-        plt.show()
+def plotImages(self, images_arr):
+    """Plots Images with BGR (not RGB)"""
+    self.images_arr = images_arr
+    imgs, labels = next(self.images_train)
+    fig, axes = plt.subplots(1, 10, figsize=(20,20))
+    axes = axes.flatten()
+    for img, ax in zip(self.images_arr, axes):
+        ax.imshow(img)
+        ax.axis('off')
+    plt.tight_layout()
+    plt.show()
 
 if '__name__' == '__main__':
     pass

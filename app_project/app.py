@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/app_project/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'wav', 'mp3', 'm4a', 'json'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'wav', 'mp3', 'm4a', 'json'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #function to see if file is allowed
@@ -33,8 +33,8 @@ def upload_file():
             return redirect(url_for('download_file', name=filename))
     return '''
     <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
+    <title>Upload Audio or Spectrogram file</title>
+    <h1>Upload Audio or Spectrogram file</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
