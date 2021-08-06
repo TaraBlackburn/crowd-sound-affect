@@ -2,6 +2,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 import sklearn
+from tensorflow.keras.applications.inception_v3 import preprocess_input
+from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D
 from tensorflow.keras.optimizers import Adam
@@ -133,10 +135,14 @@ class Inception_v3model():
         final_model.evaluate(self.images_test)
     
     
-    def predict_model(self):
-        """pre-loaded testing data."""
+    def predict_model(self, img_path):
+        """perdicts with pre-loaded model."""
         final_model = tf.keras.models.load_model('model_checkpoints')
-        final_model.predict(self.images_test)
+        img = image.load_img(self.img_path, target_size=(224, 224))
+        img_array = image.img_to_array(img)
+        img_batch = np.expand_dims(img_array, axis=0)
+        img_preprocessed = preprocess_input(img_batch)
+        final_model.predict(self.img)
 
     
 

@@ -72,7 +72,7 @@ from flask import Flask, request, jsonify, render_template
 import pickle
 
 app = Flask(__name__)
-final_model = tf.keras.models.load_model('./model_checkpoints')
+final_model = tf.keras.models.load_model('model_checkpoints')
 
 @app.route('/')
 def home():
