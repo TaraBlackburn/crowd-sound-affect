@@ -10,6 +10,7 @@ from tensorflow.keras.metrics import categorical_crossentropy
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
 import seaborn as sns 
+import shutil
 import matplotlib.pyplot as plt
 
 img_file = ['png', 'jpg', 'jpeg', 'gif']
@@ -129,23 +130,17 @@ class Inception_v3model():
     def evaluate_model(self):
         """pre-loaded testing data."""
         final_model = tf.keras.models.load_model('model_checkpoints')
-        return final_model.evalute(self.images_test)
+        final_model.evaluate(self.images_test)
+    
+    
+    def predict_model(self):
+        """pre-loaded testing data."""
+        final_model = tf.keras.models.load_model('model_checkpoints')
+        final_model.predict(self.images_test)
 
-
-
-    def plotImages(self):
-        """Plots Images with BGR (not RGB)"""
-        imgs, labels = next(self.images_train)
-        fig, axes = plt.subplots(1, 10, figsize=(20,20))
-        axes = axes.flatten()
-        for img, ax in zip(self.images_train, axes):
-            ax.imshow(img)
-            ax.axis('off')
-        plt.tight_layout()
-        plt.show()
     
 
-class upload_files():
+class uploaded_files():
     
     def __init__(self, file):
         self.file = file
@@ -156,7 +151,11 @@ class upload_files():
                 .flow_from_directory(directory=self.file, target_size=(224,224), batch_size=self.batch_size)
             final_model = tf.keras.models.load_model('model_checkpoints')
             final_model.evaluate(self.file_gen)
-        pass
+        if self.file in audio_file:
+            source = self.file
+            destination = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/app_project/audio_files'
+            dest = shutil.move(source, destination) 
+
 
 
 if '__name__' == '__main__':
