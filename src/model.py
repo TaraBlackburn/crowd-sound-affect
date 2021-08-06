@@ -12,7 +12,8 @@ from sklearn.metrics import confusion_matrix, classification_report, plot_confus
 import seaborn as sns 
 import matplotlib.pyplot as plt
 
-
+img_file = ['png', 'jpg', 'jpeg', 'gif']
+audio_file = [ 'wav', 'mp3', 'm4a', ]
 
 class VGG16model():
 
@@ -141,6 +142,19 @@ class Inception_v3model():
             ax.axis('off')
         plt.tight_layout()
         plt.show()
+    
+
+class upload_files():
+    def __init__(self, file):
+        self.file = file
+
+    def fit(self):
+        if self.file in img_file:
+            self.file_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
+                .flow_from_directory(directory=self.file, target_size=(224,224), batch_size=self.batch_size)
+            final_model = tf.keras.models.load_model('model_checkpoints')
+            final_model.evaluate(self.file_gen)
+
 
 if '__name__' == '__main__':
     pass

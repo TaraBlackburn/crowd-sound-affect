@@ -72,10 +72,3 @@ def download_file(name):
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True)
-    app.secret_key = 'super secret key'
-    app.config['SESSION_TYPE'] = 'filesystem'
-
-    sess.init_app(app)
-
-    app.debug = True
-    app.run()
