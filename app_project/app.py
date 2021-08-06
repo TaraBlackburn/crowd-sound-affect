@@ -3,6 +3,7 @@ import speech_recognition as sr
 import os
 from werkzeug.utils import secure_filename
 
+
 app = Flask(__name__)
 UPLOAD_FOLDER = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/app_project/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'wav', 'mp3', 'm4a', 'json'}
@@ -33,7 +34,7 @@ def upload_file():
             return redirect(url_for('download_file', name=filename))
     return '''
     <!doctype html>
-    <title>Upload Audio or Spectrogram file</title>
+    <title>Upload new File</title>
     <h1>Upload Audio or Spectrogram file</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
@@ -71,3 +72,10 @@ def download_file(name):
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True)
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
+
+    sess.init_app(app)
+
+    app.debug = True
+    app.run()
