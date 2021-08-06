@@ -75,7 +75,7 @@ class Inception_v3model():
     def __init__(self, train_path, test_path, batch_size=16): 
         """Takes in a path to a directory for training and validation sets"""
         self.train_path = train_path
-        self.valid_path = test_path
+        self.test_path = test_path
         self.batch_size = batch_size
 
     def fit(self):
@@ -126,9 +126,10 @@ class Inception_v3model():
         ax.xaxis.set_ticklabels(['Approval', 'Disapproval', 'Neutral']); 
         ax.yaxis.set_ticklabels(['Approval', 'Disapproval', 'Neutral']);
 
-    def load_model():
-        """set to variable to save the loaded model weights"""
-        return tf.keras.models.load_model('model_checkpoints')
+    def evaluate_model(self):
+        """pre-loaded testing data."""
+        final_model = tf.keras.models.load_model('model_checkpoints')
+        return final_model.evalute(self.images_test)
 
 
 
@@ -145,6 +146,7 @@ class Inception_v3model():
     
 
 class upload_files():
+    
     def __init__(self, file):
         self.file = file
 
@@ -154,6 +156,7 @@ class upload_files():
                 .flow_from_directory(directory=self.file, target_size=(224,224), batch_size=self.batch_size)
             final_model = tf.keras.models.load_model('model_checkpoints')
             final_model.evaluate(self.file_gen)
+        pass
 
 
 if '__name__' == '__main__':
