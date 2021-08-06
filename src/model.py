@@ -131,17 +131,16 @@ class Inception_v3model():
 
 
 
-def plotImages(self, images_arr):
-    """Plots Images with BGR (not RGB)"""
-    self.images_arr = images_arr
-    imgs, labels = next(self.images_train)
-    fig, axes = plt.subplots(1, 10, figsize=(20,20))
-    axes = axes.flatten()
-    for img, ax in zip(self.images_arr, axes):
-        ax.imshow(img)
-        ax.axis('off')
-    plt.tight_layout()
-    plt.show()
+    def plotImages(self):
+        """Plots Images with BGR (not RGB)"""
+        imgs, labels = next(self.images_train)
+        fig, axes = plt.subplots(1, 10, figsize=(20,20))
+        axes = axes.flatten()
+        for img, ax in zip(self.images_train, axes):
+            ax.imshow(img)
+            ax.axis('off')
+        plt.tight_layout()
+        plt.show()
 
 if '__name__' == '__main__':
     pass
