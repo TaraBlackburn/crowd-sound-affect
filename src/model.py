@@ -105,14 +105,14 @@ class Inception_v3model():
                     MaxPool2D(pool_size=(2, 2), strides=2),
                     Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=2),
-                    Dropout(.3),
+                    MaxPool2D(pool_size=(3, 3), strides=3),
+                    Dropout(.2),
                     Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding = 'same'),
                     MaxPool2D(pool_size=(2, 2), strides=2),
-                    Dropout(.5),
+                    Dropout(.3),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
                     MaxPool2D(pool_size=(2, 2), strides=2),
-                    Dropout(.3),
+                    Dropout(.2),
                     Flatten(),
                     Dense(units=3, activation='softmax')
                     ])
@@ -128,9 +128,9 @@ class Inception_v3model():
                         validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
-        self.model.save("model_checkpoint/my_new_model")
-        self.model.save('model_checkpoint/my_h5_model',save_format='h5')
-        self.model.save('model_checkpoint/my_keras_save.keras')
+        self.model.save("model_checkpoint/my_new_model_dropouts")
+        self.model.save('model_checkpoint/my_h5_model_dropouts',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_dropouts.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
