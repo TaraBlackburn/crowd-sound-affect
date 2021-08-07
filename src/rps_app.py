@@ -67,6 +67,6 @@ else:
         st.write("Disapproval")
     else:
         st.write("Neural")
-    b, a, c = prediction[0]
-    st.text(f"Probability of Approval: {b}, Disapproval: {c}, Neutral: {a} ")
+    a, b, c = prediction[0]
+    st.text(f"Probability of Approval: {a}, Disapproval: {b}, Neutral: {c} ")
     st.write(prediction)
