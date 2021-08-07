@@ -28,7 +28,9 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 file = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_test/log/approval/appl000000000014.png'
-
+images = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_training/all_freq'
+valid_set = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_training/valid_set'
+testing = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_test/all_freq'
 def import_and_predict(image_data, model):
     
         size = (224,224)    
@@ -48,3 +50,8 @@ model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/mo
 image = Image.open(file)
 prediction = import_and_predict(image, model)
 print(prediction)
+a, b, c = prediction[0]
+print(a, b, c)
+
+score = model.evaluate(images, testing, verbose=0)
+print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')

@@ -5,7 +5,7 @@ import sklearn
 from tensorflow.keras.applications.inception_v3 import preprocess_input
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D
+from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D, Dropout
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.metrics import categorical_crossentropy
@@ -14,6 +14,8 @@ from sklearn.metrics import confusion_matrix, classification_report, plot_confus
 import seaborn as sns 
 import shutil
 import matplotlib.pyplot as plt
+from tensorflow.python.keras.layers.core import Dropout
+from tensorflow.python.keras.preprocessing.image import DirectoryIterator
 
 img_file = ['png', 'jpg', 'jpeg', 'gif']
 audio_file = [ 'wav', 'mp3', 'm4a', ]
@@ -95,21 +97,29 @@ class Inception_v3model():
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
 
-    def model_build(self, learningrate=.001):
+    def model_build(self, learningrate=.01):
         """Builds a model"""
         self.learningrate = learningrate
         self.model = Sequential([
                     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(224,224,3)),
                     MaxPool2D(pool_size=(2, 2), strides=2),
+                    Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
                     MaxPool2D(pool_size=(2, 2), strides=2),
+                    Dropout(.3),
+                    Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding = 'same'),
+                    MaxPool2D(pool_size=(2, 2), strides=2),
+                    Dropout(.5),
+                    Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
+                    MaxPool2D(pool_size=(2, 2), strides=2),
+                    Dropout(.3),
                     Flatten(),
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=2)]
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=5)]
 
-    def model_fit(self, epochs=50):
+    def model_fit(self, epochs=10):
         """Fits the model"""
         self.epochs = epochs
         self.model.fit(x=self.images_train,

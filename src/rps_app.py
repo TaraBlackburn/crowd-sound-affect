@@ -27,7 +27,7 @@ import seaborn as sns
 import shutil
 import matplotlib.pyplot as plt
 
-model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoints/model.h5')
+model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model')
 
 class_dict = {0:'Approval', 1:'Disapproval', 2:'Neutral'}
 
@@ -67,6 +67,6 @@ else:
         st.write("Disapproval")
     else:
         st.write("Neural")
-    a, b, c = prediction
-    st.text(f"Probability {a} : Approval, {b}, Disapproval, {c}: Neutral")
+    b, a, c = prediction[0]
+    st.text(f"Probability of Approval: {b}, Disapproval: {c}, Neutral: {a} ")
     st.write(prediction)
