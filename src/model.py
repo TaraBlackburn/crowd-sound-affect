@@ -20,16 +20,19 @@ audio_file = [ 'wav', 'mp3', 'm4a', ]
 
 class VGG16model():
 
-    def __init__(self, train_path, test_path, batch_size=16): 
+    def __init__(self, train_path, valid_path, test_path, batch_size=16): 
         """Takes in a path to a directory"""
         self.train_path = train_path
         self.test_path = test_path
+        self.valid_path = valid_path
         self.batch_size = batch_size
 
     def fit(self):
         """From the path will use a DirectoryIterator and fit the spectrograms with ImageDataGenerator"""
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
+        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
+                .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
@@ -75,16 +78,19 @@ class VGG16model():
 
 class Inception_v3model():
 
-    def __init__(self, train_path, test_path, batch_size=16): 
-        """Takes in a path to a directory for training and validation sets"""
+    def __init__(self, train_path, valid_path, test_path, batch_size=16): 
+        """Takes in a path to a directory"""
         self.train_path = train_path
         self.test_path = test_path
+        self.valid_path = valid_path
         self.batch_size = batch_size
 
     def fit(self):
         """From the path will use a DirectoryIterator and fit the spectrograms with ImageDataGenerator"""
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
+        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
+                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
@@ -101,16 +107,18 @@ class Inception_v3model():
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_checkpoint/model.h5')]
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights')]
 
     def model_fit(self, epochs=50):
         """Fits the model"""
         self.epochs = epochs
         self.model.fit(x=self.images_train,
                         steps_per_epoch=len(self.images_train),
-                        validation_split=0.3,
+                        validation_data=self.images_valid,
+                        validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
+        self.model.save("model_checkpoint/my_new_model")
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
@@ -142,7 +150,16 @@ class Inception_v3model():
         img_array = image.img_to_array(img)
         img_batch = np.expand_dims(img_array, axis=0)
         img_preprocessed = preprocess_input(img_batch)
-        final_model.predict(self.img)
+        final_model.predict(img_preprocessed)
+
+
+    def predict_model_app(self, img):
+        """perdicts with pre-loaded model."""
+        final_model = tf.keras.models.load_model('model_checkpoints')
+        img_array = image.img_to_array(img)
+        img_batch = np.expand_dims(img_array, axis=0)
+        img_preprocessed = preprocess_input(img_batch)
+        final_model.predict(img_preprocessed)
 
     
 

@@ -5,18 +5,30 @@ import numpy as np
 import cv2
 from tensorflow.keras.applications.inception_v3 import preprocess_input
 from tensorflow.keras.preprocessing import image
-import tensorflow as tf
-from tensorflow import keras
+from tensorflow.keras import models
 import os
 from model import Inception_v3model
 from tensorflow.keras.preprocessing import image
 import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+import sklearn
+from tensorflow.keras.applications.inception_v3 import preprocess_input
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.metrics import categorical_crossentropy
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
+import seaborn as sns 
+import shutil
+import matplotlib.pyplot as plt
 
-# I just need these to fit my pre-loaded model, other than that there is no use. 
-images = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_training/all_freq'
-testing = '/home/pteradox/Galvanize/capstones/crowd-sound-affect/dataset/step4_split_spectrograms/dataset_test/all_freq'
-#Pre-trained and pre-loaded model
-model = Inception_v3model(images, testing)
+model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoints/model.h5')
+
 class_dict = {0:'Approval', 1:'Disapproval', 2:'Neutral'}
 
 st.write("""
@@ -28,13 +40,25 @@ st.write("Predict whether a spectrogram converted from an audiofile is going to 
 
 file = st.file_uploader("Please upload an image file", type=["jpg", "png"])
 
-
+def import_and_predict(image_data, model):
+    
+        size = (150,150)    
+        image = ImageOps.fit(image_data, size, Image.ANTIALIAS)
+        image = np.asarray(image)
+        img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        img_resize = (cv2.resize(img, dsize=(75, 75),    interpolation=cv2.INTER_CUBIC))/255.
+        
+        img_reshape = img_resize[np.newaxis,...]
+    
+        prediction = model.predict(img_reshape)
+        
+        return prediction
 if file is None:
     st.text("Please upload an image file")
 else:
     image = Image.open(file)
     st.image(image)
-    prediction = model.predict_model(image)
+    prediction = import_and_predict(image, model)
     
     if np.argmax(prediction) == 0:
         st.write("Approval")
@@ -43,5 +67,5 @@ else:
     else:
         st.write("Neural")
     a, b, c = prediction
-    st.text(f"Probability {a} : Approval, {b}, Disapproval, {c} Neutral")
+    st.text(f"Probability {a} : Approval, {b}, Disapproval, {c}: Neutral")
     st.write(prediction)
