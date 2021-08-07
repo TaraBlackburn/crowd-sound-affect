@@ -107,7 +107,7 @@ class Inception_v3model():
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights')]
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=2)]
 
     def model_fit(self, epochs=50):
         """Fits the model"""
@@ -119,6 +119,8 @@ class Inception_v3model():
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
         self.model.save("model_checkpoint/my_new_model")
+        self.model.save('model_checkpoint/my_h5_model',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_save.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
