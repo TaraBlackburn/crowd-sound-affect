@@ -20,7 +20,7 @@ from tensorflow.python.keras.preprocessing.image import DirectoryIterator
 img_file = ['png', 'jpg', 'jpeg', 'gif']
 audio_file = [ 'wav', 'mp3', 'm4a', ]
 
-class VGG16model():
+class Inception():
 
     def __init__(self, train_path, valid_path, test_path, batch_size=16): 
         """Takes in a path to a directory"""
@@ -31,11 +31,11 @@ class VGG16model():
 
     def fit(self):
         """From the path will use a DirectoryIterator and fit the spectrograms with ImageDataGenerator"""
-        self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
+        self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
-        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
-                .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
-        self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input)\
+        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
+                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
+        self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
 
@@ -97,7 +97,7 @@ class Inception_v3model():
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
 
-    def model_build(self, learningrate=.01):
+    def model_build(self, learningrate=.001):
         """Builds a model"""
         self.learningrate = learningrate
         self.model = Sequential([
@@ -105,10 +105,10 @@ class Inception_v3model():
                     MaxPool2D(pool_size=(2, 2), strides=2),
                     Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(3, 3), strides=3),
+                    MaxPool2D(pool_size=(2, 2), strides=3),
                     Dropout(.2),
                     Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=2),
+                    MaxPool2D(pool_size=(1, 1), strides=1),
                     Dropout(.3),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
                     MaxPool2D(pool_size=(2, 2), strides=2),
@@ -128,9 +128,9 @@ class Inception_v3model():
                         validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
-        self.model.save("model_checkpoint/my_new_model_dropouts")
-        self.model.save('model_checkpoint/my_h5_model_dropouts',save_format='h5')
-        self.model.save('model_checkpoint/my_keras_dropouts.keras')
+        self.model.save("model_checkpoint/my_new_model_pool")
+        self.model.save('model_checkpoint/my_h5_model_pool',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_pool.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
