@@ -22,7 +22,7 @@ audio_file = [ 'wav', 'mp3', 'm4a', ]
 
 class Inception():
 
-    def __init__(self, train_path, valid_path, test_path, batch_size=16): 
+    def __init__(self, train_path, valid_path, test_path, batch_size=32): 
         """Takes in a path to a directory"""
         self.train_path = train_path
         self.test_path = test_path
@@ -101,17 +101,17 @@ class Inception_v3model():
         """Builds a model"""
         self.learningrate = learningrate
         self.model = Sequential([
-                    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(224,224,3)),
+                    Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(224,224,3)),
                     MaxPool2D(pool_size=(2, 2), strides=2),
                     Dropout(.1),
-                    Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=3),
-                    Dropout(.2),
                     Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(1, 1), strides=1),
+                    MaxPool2D(pool_size=(4, 4), strides=3),
+                    Dropout(.1),
+                    Conv2D(filters=128, kernel_size=(3, 3), activation='relu', padding = 'same'),
+                    MaxPool2D(pool_size=(2, 2), strides=1),
                     Dropout(.3),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(1, 1), strides=1),
+                    MaxPool2D(pool_size=(3, 3), strides=1),
                     Dropout(.5),
                     Flatten(),
                     Dense(units=3, activation='softmax')
@@ -119,7 +119,7 @@ class Inception_v3model():
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
         self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=5)]
 
-    def model_fit(self, epochs=15):
+    def model_fit(self, epochs=50):
         """Fits the model"""
         self.epochs = epochs
         self.model.fit(x=self.images_train,
@@ -128,9 +128,9 @@ class Inception_v3model():
                         validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
-        self.model.save("model_checkpoint/my_new_model_stretch")
-        self.model.save('model_checkpoint/my_h5_model_stretch',save_format='h5')
-        self.model.save('model_checkpoint/my_keras_stretch.keras')
+        self.model.save("model_checkpoint/my_new_model_compact")
+        self.model.save('model_checkpoint/my_h5_model_compact',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_compact.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
