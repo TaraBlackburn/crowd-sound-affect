@@ -92,7 +92,7 @@ class Inception_v3model():
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
         self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
+                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size)
         self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
                 .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
         
@@ -111,15 +111,15 @@ class Inception_v3model():
                     MaxPool2D(pool_size=(1, 1), strides=1),
                     Dropout(.3),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=2),
-                    Dropout(.2),
+                    MaxPool2D(pool_size=(1, 1), strides=1),
+                    Dropout(.5),
                     Flatten(),
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
         self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=5)]
 
-    def model_fit(self, epochs=10):
+    def model_fit(self, epochs=15):
         """Fits the model"""
         self.epochs = epochs
         self.model.fit(x=self.images_train,
@@ -128,9 +128,9 @@ class Inception_v3model():
                         validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
-        self.model.save("model_checkpoint/my_new_model_pool")
-        self.model.save('model_checkpoint/my_h5_model_pool',save_format='h5')
-        self.model.save('model_checkpoint/my_keras_pool.keras')
+        self.model.save("model_checkpoint/my_new_model_stretch")
+        self.model.save('model_checkpoint/my_h5_model_stretch',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_stretch.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
@@ -151,13 +151,13 @@ class Inception_v3model():
 
     def evaluate_model(self):
         """pre-loaded testing data."""
-        final_model = tf.keras.models.load_model('model_checkpoints')
+        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_pool')
         final_model.evaluate(self.images_test)
     
     
     def predict_model(self, img_path):
         """perdicts with pre-loaded model."""
-        final_model = tf.keras.models.load_model('model_checkpoints')
+        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_pool')
         img = image.load_img(self.img_path, target_size=(224, 224))
         img_array = image.img_to_array(img)
         img_batch = np.expand_dims(img_array, axis=0)
