@@ -27,7 +27,7 @@ import seaborn as sns
 import shutil
 import matplotlib.pyplot as plt
 
-model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_pool')
+model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_new_model_stretch')
 
 class_dict = {0:'Approval', 1:'Disapproval', 2:'Neutral'}
 
