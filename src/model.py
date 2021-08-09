@@ -80,7 +80,7 @@ class Inception():
 
 class Inception_v3model():
 
-    def __init__(self, train_path, valid_path, test_path, batch_size=16): 
+    def __init__(self, train_path, valid_path, test_path, batch_size=32): 
         """Takes in a path to a directory"""
         self.train_path = train_path
         self.test_path = test_path
@@ -90,34 +90,34 @@ class Inception_v3model():
     def fit(self):
         """From the path will use a DirectoryIterator and fit the spectrograms with ImageDataGenerator"""
         self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
-        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size)
-        self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
+                .flow_from_directory(directory=self.train_path, target_size=(250,250), batch_size=self.batch_size)
+        self.images_valid = ImageDataGenerator(rescale=1. / 255)\
+                .flow_from_directory(directory=self.valid_path, target_size=(250,250), batch_size=self.batch_size)
+        self.images_test = ImageDataGenerator(rescale=1. / 255)\
+                .flow_from_directory(directory=self.test_path, target_size=(250,250), batch_size=self.batch_size, shuffle=False)
         
 
-    def model_build(self, learningrate=.001):
+    def model_build(self, learningrate=.0001):
         """Builds a model"""
         self.learningrate = learningrate
         self.model = Sequential([
-                    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(224,224,3)),
-                    MaxPool2D(pool_size=(2, 2), strides=1),
+                    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(250, 250, 3)),
+                    MaxPool2D(pool_size=(2, 2), strides=2),
                     Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(3, 3), strides=1),
+                    MaxPool2D(pool_size=(3, 3), strides=2),
                     Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=1),
+                    MaxPool2D(pool_size=(2, 2), strides=2),
                     Dropout(.3),
                     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(3, 3), strides=1),
+                    MaxPool2D(pool_size=(3, 3), strides=2),
                     Dropout(.4),
                     Flatten(),
                     Dense(units=3, activation='softmax')
                     ])
         self.model.compile(optimizer=Adam(learning_rate=learningrate), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights{epoch:02d}', save_freq=5)]
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights/model_weights{epoch:02d}', save_freq=5)]
 
     def model_fit(self, epochs=50):
         """Fits the model"""
@@ -128,9 +128,9 @@ class Inception_v3model():
                         validation_steps=len(self.images_valid),
                         epochs=self.epochs,
                         verbose=1, callbacks=[self.callback])
-        self.model.save("model_checkpoint/my_new_model_strides")
-        self.model.save('model_checkpoint/my_h5_model_strides',save_format='h5')
-        self.model.save('model_checkpoint/my_keras_strides.keras')
+        self.model.save("model_checkpoint/my_new_model_250")
+        self.model.save('model_checkpoint/my_h5_model_250',save_format='h5')
+        self.model.save('model_checkpoint/my_keras_250.keras')
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
@@ -151,14 +151,14 @@ class Inception_v3model():
 
     def evaluate_model(self):
         """pre-loaded testing data."""
-        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_pool')
+        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_strides')
         final_model.evaluate(self.images_test)
     
     
     def predict_model(self, img_path):
         """perdicts with pre-loaded model."""
-        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_pool')
-        img = image.load_img(self.img_path, target_size=(224, 224))
+        final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_strides')
+        img = image.load_img(self.img_path, target_size=(250, 250))
         img_array = image.img_to_array(img)
         img_batch = np.expand_dims(img_array, axis=0)
         img_preprocessed = preprocess_input(img_batch)
@@ -183,7 +183,7 @@ class uploaded_files():
     def fit(self):
         if self.file in img_file:
             self.file_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.file, target_size=(224,224), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.file, target_size=(250,250), batch_size=self.batch_size)
             final_model = tf.keras.models.load_model('model_checkpoints')
             final_model.evaluate(self.file_gen)
         if self.file in audio_file:
