@@ -4,3 +4,5 @@ __pycache__
 model_checkpoints
 model_weights
 __pycache__
+app_project
+testing.py

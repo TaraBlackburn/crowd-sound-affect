@@ -1,33 +1,16 @@
 import streamlit as st
 import tensorflow as tf
 from PIL import Image, ImageOps
-import numpy as np
-import cv2
-from tensorflow.keras.applications.inception_v3 import preprocess_input
-from tensorflow.keras.preprocessing import image
 from tensorflow.keras import models
-import os
-from model import Inception_v3model
-from tensorflow.keras.preprocessing import image
 import numpy as np
-import tensorflow as tf
+import os
+import cv2
+from tensorflow.keras.preprocessing import image
 from tensorflow import keras
 import sklearn
-from tensorflow.keras.applications.inception_v3 import preprocess_input
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Activation, Dense, Flatten, BatchNormalization, Conv2D, MaxPool2D
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import load_model
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.metrics import categorical_crossentropy
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from sklearn.metrics import confusion_matrix, classification_report, plot_confusion_matrix
-import seaborn as sns 
-import shutil
-import matplotlib.pyplot as plt
 
-model = load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_compact')
+
+model = models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_strides')
 
 class_dict = {0:'Approval', 1:'Disapproval', 2:'Neutral'}
 
@@ -45,8 +28,8 @@ def import_and_predict(image_data, model):
         size = (224,224)    
         image = ImageOps.fit(image_data, size, Image.ANTIALIAS)
         image = np.asarray(image)
-        img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        img_resize = (cv2.resize(img, dsize=(224, 224),    interpolation=cv2.INTER_CUBIC))/255.
+        # img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        img_resize = (cv2.resize(image, dsize=(224, 224)))/255.
         
         img_reshape = img_resize[np.newaxis,...]
     
