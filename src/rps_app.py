@@ -10,7 +10,7 @@ from tensorflow import keras
 import sklearn
 
 
-model = models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_strides')
+# loaded_model = models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_compact')
 
 class_dict = {0:'Approval', 1:'Disapproval', 2:'Neutral'}
 
@@ -23,26 +23,21 @@ st.write("Predict whether a spectrogram converted from an audiofile is going to 
 
 file = st.file_uploader("Please upload an image file", type=["jpg", "png"])
 
-def import_and_predict(image_data, model):
-    
-        size = (224,224)    
-        image = ImageOps.fit(image_data, size, Image.ANTIALIAS)
-        image = np.asarray(image)
-        # img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        img_resize = (cv2.resize(image, dsize=(224, 224)))/255.
-        
-        img_reshape = img_resize[np.newaxis,...]
-    
-        prediction = model.predict(img_reshape)
-        
-        return prediction
+def import_and_predict(image_data):
+        model = models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_compact')
+        image = tf.keras.preprocessing.image.img_to_array(image_data)/255
+        image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+        predict = model.predict(image)
+        return predict
 
 if file is None:
     st.text("Please upload an image file")
 else:
     image = Image.open(file)
     st.image(image)
-    prediction = import_and_predict(image, model)
+    feed = Image.open(file).convert('RGB')
+    feed = feed.resize((224,224))
+    prediction = import_and_predict(feed)
     
     if np.argmax(prediction) == 0:
         st.write("Approval")

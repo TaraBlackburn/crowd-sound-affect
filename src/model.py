@@ -20,7 +20,7 @@ from tensorflow.python.keras.preprocessing.image import DirectoryIterator
 img_file = ['png', 'jpg', 'jpeg', 'gif']
 audio_file = [ 'wav', 'mp3', 'm4a', ]
 
-class Inception():
+class AlexNet():
 
     def __init__(self, train_path, valid_path, test_path, batch_size=32): 
         """Takes in a path to a directory"""
@@ -31,34 +31,52 @@ class Inception():
 
     def fit(self):
         """From the path will use a DirectoryIterator and fit the spectrograms with ImageDataGenerator"""
-        self.images_train = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.train_path, target_size=(224,224), batch_size=self.batch_size)
-        self.images_valid = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.valid_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
-        self.images_test = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.test_path, target_size=(224,224), batch_size=self.batch_size, shuffle=False)
+        self.images_train = ImageDataGenerator(rescale=1./255,
+                                                shear_range=0.2,
+                                                zoom_range=0.2,
+                                                horizontal_flip=True)\
+                .flow_from_directory(directory=self.train_path, target_size=(277, 277), batch_size=self.batch_size)
+        self.images_valid = ImageDataGenerator(rescale=1. / 255)\
+                .flow_from_directory(directory=self.valid_path, target_size=(277, 277), batch_size=self.batch_size)
+        self.images_test = ImageDataGenerator(rescale=1. / 255)\
+                .flow_from_directory(directory=self.test_path, target_size=(277, 277), batch_size=self.batch_size, shuffle=False)
         
 
     def model_build(self):
         """Builds a model"""
-        self.model = Sequential([
-                    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(224,224,3)),
-                    MaxPool2D(pool_size=(2, 2), strides=2),
-                    Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
-                    MaxPool2D(pool_size=(2, 2), strides=2),
-                    Flatten(),
-                    Dense(units=3, activation='softmax')
-                    ])
-        self.model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
-        self.callback = tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2)
+        self.model = keras.models.Sequential([
+            keras.layers.Conv2D(filters=96, kernel_size=(11,11), strides=(4,4), activation='relu', input_shape=(227,227,3)),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPool2D(pool_size=(3,3), strides=(2,2)),
+            keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(1,1), activation='relu', padding="same"),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPool2D(pool_size=(3,3), strides=(2,2)),
+            keras.layers.Conv2D(filters=384, kernel_size=(3,3), strides=(1,1), activation='relu', padding="same"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Conv2D(filters=384, kernel_size=(3,3), strides=(1,1), activation='relu', padding="same"),
+            keras.layers.BatchNormalization(),
+            keras.layers.Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), activation='relu', padding="same"),
+            keras.layers.BatchNormalization(),
+            keras.layers.MaxPool2D(pool_size=(3,3), strides=(2,2)),
+            keras.layers.Flatten(),
+            keras.layers.Dense(4096, activation='relu'),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(4096, activation='relu'),
+            keras.layers.Dropout(0.5),
+            keras.layers.Dense(10, activation='softmax')
+        ])
+        self.model.compile(optimizer=tf.optimizers.SGD(lr=0.001), metrics=['accuracy'])
+        self.callback = [tf.keras.callbacks.EarlyStopping(monitor='accuracy', patience=2), tf.keras.callbacks.ModelCheckpoint('model_weights/model_weights{epoch:02d}', save_freq=5)]
 
-    def model_fit(self):
+
+    def model_fit(self, epochs=20):
         """Fits the model"""
+        self.epochs = epochs
         self.model.fit(x=self.images_train,
-                        steps_per_epoch=len(self.images_train),
-                        validation_split=0.3,
-                        epochs=50,
-                        verbose=1, callbacks=[self.callback])
+                        validation_data=self.images_valid,
+                        validation_freq=1,
+                        epochs=self.epochs,
+                        callbacks=[self.callback])
 
     def conf_matrix(self):
         Y_pred = self.model.predict(self.images_test, len(self.images_test)// self.batch_size+1)
@@ -93,18 +111,18 @@ class Scratch_Model():
                                                 shear_range=0.2,
                                                 zoom_range=0.2,
                                                 horizontal_flip=True)\
-                .flow_from_directory(directory=self.train_path, target_size=(656, 875), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.train_path, target_size=(224, 224), batch_size=self.batch_size)
         self.images_valid = ImageDataGenerator(rescale=1. / 255)\
-                .flow_from_directory(directory=self.valid_path, target_size=(656, 875), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.valid_path, target_size=(224, 224), batch_size=self.batch_size)
         self.images_test = ImageDataGenerator(rescale=1. / 255)\
-                .flow_from_directory(directory=self.test_path, target_size=(656, 875), batch_size=self.batch_size, shuffle=False)
+                .flow_from_directory(directory=self.test_path, target_size=(224, 224), batch_size=self.batch_size, shuffle=False)
         
 
-    def model_build(self, learningrate=.0001):
+    def model_build(self, learningrate=.001):
         """Builds a model"""
         self.learningrate = learningrate
         self.model = Sequential([
-                    Conv2D(filters=32, kernel_size=(2,2), activation='relu', padding = 'same', input_shape=(656, 875, 3)),
+                    Conv2D(filters=32, kernel_size=(2,2), activation='relu', padding = 'same', input_shape=(224, 224, 3)),
                     AveragePooling2D(pool_size=(2,2), strides=2),
                     Dropout(.1),
                     Conv2D(filters=64, kernel_size=(3, 3), activation='relu', padding = 'same'),
@@ -158,7 +176,7 @@ class Scratch_Model():
     def predict_model(self, img_path):
         """perdicts with pre-loaded model."""
         final_model = tf.keras.models.load_model('/home/pteradox/Galvanize/capstones/crowd-sound-affect/src/model_checkpoint/my_h5_model_strides')
-        img = image.load_img(self.img_path, target_size=(250, 250))
+        img = image.load_img(self.img_path, target_size=(224, 224))
         img_array = image.img_to_array(img)
         img_batch = np.expand_dims(img_array, axis=0)
         img_preprocessed = preprocess_input(img_batch)
@@ -183,7 +201,7 @@ class uploaded_files():
     def fit(self):
         if self.file in img_file:
             self.file_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.inception_v3.preprocess_input)\
-                .flow_from_directory(directory=self.file, target_size=(656, 875), batch_size=self.batch_size)
+                .flow_from_directory(directory=self.file, target_size=(224, 224), batch_size=self.batch_size)
             final_model = tf.keras.models.load_model('model_checkpoints')
             final_model.evaluate(self.file_gen)
         if self.file in audio_file:
