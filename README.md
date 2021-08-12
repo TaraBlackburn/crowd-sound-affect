@@ -13,15 +13,15 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 
 [Process](#Process)
 
-[The Data](#The Data)
+[The Data](#The-Data)
 
-[What are Spectrograms?](#What are Spectrograms?)
+[What are Spectrograms?](#What-are-Spectrograms?)
 
-[Approaches to Models](#Approaches to Models)
+[Approaches to Models](#Approaches-to-Models)
 
 [Results](#Results)
 
-[Further Research](#Further Research)
+[Further Research](#Further-Research)
 
 
 To see more please visit the ![original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the ![original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
