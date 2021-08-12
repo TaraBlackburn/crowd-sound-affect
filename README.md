@@ -27,13 +27,13 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 To see more please visit the ![original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the ![original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
 
 
-## Process
+# Process
 - Collecting data and researching previous models 
 - Starting with a base Sequential Convolutional Neural Network (CNN)
 - Transfer Learning
 - Final Model and app deployment with Streamlit
 
-## The Data
+# The Data
 
 - 01 Normalized between 20 - 20,000 Hertz (Hz) which is sound audible to humans
 - 02 Silence Blocks Removed
@@ -45,7 +45,7 @@ The paper originally classified a range of frequencies, Bark (0–3.5 kHz range)
 
 I, on the other hand, only classifed Approval, Disapproval and Neutral for my labels. I split the data into testing, training and validation sets. 
 
-## What are Spectrograms?
+# What are Spectrograms?
 Spectrograms can be thought of as a 3-D visulaization of audio sounds. 
 The X axis is Time
 The Y axis is Frequency 
@@ -67,7 +67,7 @@ Labels of the images in order:
 | Approval    |     Neutral      |     Approval        |       Disapproval  |      Disapproval    |    Disapproval    |      Approval   |           Approval |
 ![Preprocessed_shuffle](https://user-images.githubusercontent.com/61055286/129240138-66e4c694-9b58-4b6b-b75b-364cb82140fe.png)
 
-## Approaches to Models
+# Approaches to Models
 The original paper's approach used an AlexNet with 4 epochs, L2 Regularization and were also getting a validation score at around 97% average over 4 networks
 
 I used a basic Sequenital Convolutional Neural Network Model. I chose to use this and work with parameters to learn about how the model reacts and learns the spectrograms. 
