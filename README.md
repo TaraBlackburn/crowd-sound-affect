@@ -13,7 +13,8 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 [The Data](#The Data)
 [What are Spectrograms?](#What are Spectrograms?)
 [Approaches to Models](#Approaches to Models)
-
+[Results](#Results)
+[Further Research](#Further Research)
 ## Process
 - Collecting data and researching previous models 
 - Starting with a base Sequential Convolutional Neural Network (CNN)
@@ -24,13 +25,13 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 
 - 01 Normalized between 20 - 20,000 Hertz (Hz) which is sound audible to humans
 - 02 Silence Blocks Removed
-- 03 Spectrograms made with spgrambw in MATLAB
+- 03 Spectrograms made with spgrambw function in MATLAB
     - 400 samples with frame increment of 4.5 milliseconds
 - 04 Splitting the data. It was heavily unbalanced with Neutral having over 5k images, Approval having around 3k images and Disapproval having just over 300. I decreased the amount of neutral to below 3k to be a closer match approval.
 
 The paper originally classified a range of frequencies, Bark (0–3.5 kHz range), Erb (2–4 kHz range), Log (0.02-2 kHz range) and Mel (4–6 kHz range), then used the emotions Approval, Disapproval and Neutral.
 
-I, on the other hand, only classifed Approval, Disapproval and Neutral for my labels. 
+I, on the other hand, only classifed Approval, Disapproval and Neutral for my labels. I split the data into testing, training and validation sets. 
 
 ## What are Spectrograms?
 Spectrograms can be thought of as a 3-D visulaization of audio sounds. 
@@ -47,7 +48,7 @@ Labels of the images in order:
 | Neutral |             Approval |          Approval |             Approval |                   Disapproval |          Disapproval |          Disapproval |          Disapproval |
 ![shuffled_8_test](https://user-images.githubusercontent.com/61055286/129239920-b92cad62-a77b-4a9e-b7f1-c6a85776ac5e.png)
 
-The graph below shows spectrograms that were converted in BGR color scheme, this is a little easier for the human eyes to read. There are 3 images with a density of amplitude on the bottom, each a different class (Neutral, Disapproval and Approval). Normally Approval's amplitude is condensed at the top, but the last image is showing more amplitude at the bottom. This is where Independent component analysis could help distinguish if there is both approval or another emotion within the crowd. 
+The graph below shows spectrograms that were converted in BGR color scheme, this is a little easier for the human eyes to recognize some patterns. There are 3 images with a density of amplitude on the bottom, each a different class (Neutral, Disapproval and Approval). Normally Approval's amplitude is condensed at the top, but the last image is showing more amplitude at the bottom. This is where Independent component analysis could help distinguish if there is both approval or another emotion within the crowd. 
 
 Labels of the images in order: 
 
@@ -88,6 +89,23 @@ Disapproval is significantly lower than Approval and Neutral classifications and
 
 ![confustion_strides](https://user-images.githubusercontent.com/61055286/129240377-5a8fbee0-7add-4fc7-b1da-6bf625b8c317.png)
 
+# Results
+I specifically randomly chose photos that were classified incorrectly and correctly to continue my data analysis to potentially find what the data is saying, and what my model it trying to say. 
+
+ The images below are tsix testing spectrograms I used to predict with my model, the relatedness between the Approval and Neutral images with patterns are very closely similar, the main difference is the denstiy in the amplitude (which we talked about before with the BGR photos). The model is just barley predicting approval correctly or incorrectly. This was part of the reason I took out more of the Neutral data points to even out the model. 
+
+![Approval_Neutral_predict](https://user-images.githubusercontent.com/61055286/129246995-501b5f60-2e20-47e0-884b-6cbc0d7d0038.png)
+
+I wanted to see more of the dissapproval (since the percentages were lower) and below there is a lot of variation to the spectrograms in each one and the output for each of them. I believe that the problem could be fixed with more data points here. 
+
+![disapproval_predict](https://user-images.githubusercontent.com/61055286/129246999-5f7cef7a-5513-4fa4-ba85-c1e05f0a4653.png)
 
 
+# Further Research
+
+* Even though my process was to get to transfer learning, I did not however, my next steps would be to use Global Average Pooling Layers after transfer learning model
+
+* If this research is going to be used in real time, I think it would be important to include and to train the model to know what silence is and not take them out.
+
+* Also, as stated above, I would like to use Independent Component Analysis to aid in learning to distinguish and predict emotional affect within crowds where there are multiple different emotions. 
 
