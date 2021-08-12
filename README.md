@@ -15,6 +15,8 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 [Approaches to Models](#Approaches to Models)
 [Results](#Results)
 [Further Research](#Further Research)
+
+To see more please visit the ![original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the ![original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
 ## Process
 - Collecting data and researching previous models 
 - Starting with a base Sequential Convolutional Neural Network (CNN)
@@ -109,5 +111,4 @@ I wanted to see more of the dissapproval (since the percentages were lower) and 
 
 * Also, as stated above, I would like to use Independent Component Analysis to aid in learning to distinguish and predict emotional affect within crowds where there are multiple different emotions. 
 
-![Original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
-![Original Paper](https://link.springer.com/article/10.1007/s11042-020-09428-x)
+
