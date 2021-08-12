@@ -9,14 +9,24 @@ Crowds tend to use ‘mirroring’ and synchronization,
 but can also have multiple different emotions
 
 Could we use this in real-time to perceive crowds ‘likeness’ in music or events for marketing, or maybe aiding police with predicting if a crowd may turn into a mob?
+
+
 [Process](#Process)
+
 [The Data](#The Data)
+
 [What are Spectrograms?](#What are Spectrograms?)
+
 [Approaches to Models](#Approaches to Models)
+
 [Results](#Results)
+
 [Further Research](#Further Research)
 
+
 To see more please visit the ![original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the ![original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
+
+
 ## Process
 - Collecting data and researching previous models 
 - Starting with a base Sequential Convolutional Neural Network (CNN)
