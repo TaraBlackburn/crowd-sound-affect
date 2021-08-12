@@ -44,7 +44,7 @@ else:
     elif np.argmax(prediction) == 1:
         st.write("Disapproval")
     else:
-        st.write("Neural")
+        st.write("Neutral")
     # a, b, c = prediction[0]
     st.text(f"Probability {prediction})")
     st.write(prediction)
