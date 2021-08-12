@@ -109,3 +109,7 @@ I wanted to see more of the dissapproval (since the percentages were lower) and 
 
 * Also, as stated above, I would like to use Independent Component Analysis to aid in learning to distinguish and predict emotional affect within crowds where there are multiple different emotions. 
 
+Original dataset:
+https://ieee-dataport.org/open-access/emotional-crowd-sound 
+Paper:
+https://link.springer.com/article/10.1007/s11042-020-09428-x 
