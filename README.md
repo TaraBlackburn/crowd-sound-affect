@@ -120,5 +120,3 @@ I wanted to see more of the dissapproval (since the percentages were lower) and 
 * If this research is going to be used in real time, I think it would be important to include and to train the model to know what silence is and not take them out.
 
 * Also, as stated above, I would like to use Independent Component Analysis to aid in learning to distinguish and predict emotional affect within crowds where there are multiple different emotions. 
-
-
