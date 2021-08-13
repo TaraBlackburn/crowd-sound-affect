@@ -2,7 +2,8 @@
 dataset
 __pycache__
 model_checkpoints
-model_weights
+model_checkpoint
 __pycache__
 app_project
 testing.py
+model_to_finish.py
