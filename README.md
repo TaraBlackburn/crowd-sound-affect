@@ -104,7 +104,7 @@ Disapproval is significantly lower than Approval and Neutral classifications and
 # Results
 I specifically randomly chose photos that were classified incorrectly and correctly to continue my data analysis to potentially find what the data is saying, and what my model it trying to say. 
 
- The images below are tsix testing spectrograms I used to predict with my model, the relatedness between the Approval and Neutral images with patterns are very closely similar, the main difference is the denstiy in the amplitude (which we talked about before with the BGR photos). The model is just barley predicting approval correctly or incorrectly. This was part of the reason I took out more of the Neutral data points to even out the model. 
+ The images below are six testing spectrograms I used to predict with my model, the relatedness between the Approval and Neutral images with patterns are very closely similar, the main difference is the denstiy in the amplitude (which we talked about before with the BGR photos). The model is just barley predicting approval correctly or incorrectly. This was part of the reason I took out more of the Neutral data points to even out the model. 
 
 ![Approval_Neutral_predict](https://user-images.githubusercontent.com/61055286/129246995-501b5f60-2e20-47e0-884b-6cbc0d7d0038.png)
 
