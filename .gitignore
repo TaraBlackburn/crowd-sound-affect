@@ -6,4 +6,5 @@ model_checkpoint
 __pycache__
 app_project
 testing.py
+audio_to_img
 model_to_finish.py

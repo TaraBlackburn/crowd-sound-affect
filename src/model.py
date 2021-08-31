@@ -17,8 +17,6 @@ import matplotlib.pyplot as plt
 from tensorflow.python.keras.layers.core import Dropout
 from tensorflow.python.keras.preprocessing.image import DirectoryIterator
 
-img_file = ['png', 'jpg', 'jpeg', 'gif']
-audio_file = [ 'wav', 'mp3', 'm4a', ]
 
 class Scratch_Model():
 
