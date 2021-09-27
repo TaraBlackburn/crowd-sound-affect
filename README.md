@@ -23,10 +23,10 @@ Could we use this in real-time to perceive crowds ‘likeness’ in music or eve
 
 [Further Research](#Further-Research)
 
-![Presentation](https://www.loom.com/share/2ccdf31949c8480b90c3b2ecad3cb2a3)
+See the live [Presentation here](https://www.loom.com/share/2ccdf31949c8480b90c3b2ecad3cb2a3)
 
 
-To see more please visit the ![original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the ![original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
+To see more please visit the [original paper](https://link.springer.com/article/10.1007/s11042-020-09428-x), or use the [original dataset](https://ieee-dataport.org/open-access/emotional-crowd-sound)
 
 
 # Process
